@@ -1,0 +1,140 @@
+/* The dial. Geometry: ring radius --R, item centers at --ir, 64px circular hit areas.
+   The center is a Y of three wedges: search on top, close bottom-left, customize bottom-right. Search opens in the caption's place, so nothing hangs below the ring. */
+.dial-layer { position: fixed; inset: 0; z-index: 80; }
+.dial-scrim { position: absolute; inset: 0; background: var(--scrim); opacity: 0; transition: opacity var(--t-dial) var(--ease-out); }
+.dial-layer:not(.phone) .dial-scrim { background: rgb(26 34 48 / 0.16); }
+.dial-layer.open .dial-scrim { opacity: 1; }
+.dial-layer.closing .dial-scrim { opacity: 0; transition-duration: 150ms; }
+
+.dial { position: fixed; width: 0; height: 0; outline: 0; }
+.dial-disc {
+  position: absolute; left: calc(var(--R) * -1); top: calc(var(--R) * -1); width: calc(var(--R) * 2); height: calc(var(--R) * 2);
+  border-radius: 50%; background: var(--surface); box-shadow: var(--sh-float); border: 1px solid transparent;
+  opacity: 0; transition: opacity var(--t-dial) var(--ease-out), scale var(--t-dial) var(--ease-out);
+}
+.dial-layer.open .dial-disc { opacity: 1; }
+
+.dial-item {
+  position: absolute; left: -32px; top: -32px; width: 64px; height: 64px; border-radius: 50%;
+  border: 0; background: transparent; color: var(--ink); padding: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+  transform: rotate(var(--a)) translateY(calc(var(--ir) * -1)) rotate(calc(var(--a) * -1));
+  opacity: 0; transition: opacity var(--t-dial) var(--ease-out), background-color var(--t-fast) var(--ease-out);
+  transition-delay: calc(var(--i) * 20ms), 0ms;
+}
+.dial-layer.open .dial-item { opacity: 1; }
+.dial-item .di-ic { display: grid; place-items: center; width: 28px; height: 24px; color: var(--primary); }
+.dial-item .di-ic .ic { width: 22px; height: 22px; }
+.dial-item .di-l { font-size: var(--fs-12); font-weight: 600; line-height: 1.15; text-align: center; max-width: 64px; }
+.dial-item:focus-visible { outline: 2px solid var(--primary); outline-offset: -2px; background: var(--primary-soft); }
+.dial-item:active { background: var(--primary-soft); }
+.dial-item.off { color: var(--faint); }
+.dial-item.off .di-ic { color: var(--faint); }
+
+.dial-center {
+  position: absolute; left: -50px; top: -50px; width: 100px; height: 100px; border-radius: 50%; overflow: hidden;
+  display: grid; grid-template-columns: 1fr 1fr; background: var(--primary); box-shadow: var(--sh-accent);
+  opacity: 0; transition: opacity var(--t-dial) var(--ease-out), scale var(--t-fast) var(--ease-out);
+}
+/* without a customize action the center is two halves, each 50 x 100 */
+.dc { display: grid; place-items: center; border: 0; background: transparent; color: #fff; padding: 0; transition: background-color var(--t-fast) var(--ease-out); }
+.dc-close { padding-left: 8px; }
+.dc-search { padding-right: 8px; border-left: 1px solid rgb(255 255 255 / 0.35); }
+.dc .ic { width: 20px; height: 20px; }
+.dc:active { background: rgb(255 255 255 / 0.18); }
+.dc:focus-visible { outline: 2px solid #fff; outline-offset: -4px; }
+/* Y layout: each wedge is a full-size button clipped to its third, so taps land only in that wedge.
+   The largest circle inside a 120-degree wedge of a 100px disc is about 46px, above the 44px minimum. */
+.dial-center.y { display: block; }
+.dial-center.y .dc { position: absolute; inset: 0; padding: 0; border: 0; }
+.dial-center.y .dc .ic { position: absolute; translate: -50% -50%; }
+.dial-center.y .dc-search { clip-path: polygon(50% 50%, -36.6% 0%, 136.6% 0%); }
+.dial-center.y .dc-search .ic { left: 50%; top: 24%; }
+.dial-center.y .dc-close { clip-path: polygon(50% 50%, 50% 100%, -36.6% 100%, -36.6% 0%); }
+.dial-center.y .dc-close .ic { left: 27%; top: 64%; }
+.dial-center.y .dc-edit { clip-path: polygon(50% 50%, 136.6% 0%, 136.6% 100%, 50% 100%); }
+.dial-center.y .dc-edit .ic { left: 73%; top: 64%; }
+.dial-center.y .dc:focus-visible { outline: 0; background: rgb(255 255 255 / 0.28); }
+.dc-lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+.dc-lines path { fill: none; stroke: rgb(255 255 255 / 0.4); stroke-width: 1.2; }
+.dial-layer.open .dial-center { opacity: 1; }
+
+.dial-cap {
+  position: absolute; left: 50%; bottom: calc(var(--R) + 14px); translate: -50% 0; width: max-content; max-width: min(320px, calc(100vw - 32px));
+  padding: 6px 14px; border-radius: var(--r-lg); background: var(--surface); box-shadow: var(--sh-float); border: 1px solid transparent;
+  font-size: var(--fs-14); color: var(--muted); text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  opacity: 0; transition: opacity var(--t-dial) var(--ease-out);
+}
+.dial-cap b { color: var(--ink); font-weight: 600; }
+.dial-layer.open .dial-cap { opacity: 1; }
+
+.dial-search {
+  position: absolute; left: 50%; bottom: calc(var(--R) + 10px); translate: -50% 0; width: min(320px, calc(100vw - 32px));
+  display: flex; align-items: center; gap: 8px; padding: 0 8px 0 14px; min-height: 48px;
+  border-radius: var(--r-lg); background: var(--surface); box-shadow: var(--sh-float); border: 1px solid transparent; color: var(--muted);
+  opacity: 0; transition: opacity var(--t-dial) var(--ease-out) 60ms;
+}
+.dial-search[hidden] { display: none; }
+.dial-layer.open .dial-search { opacity: 1; }
+.dial.searching .dial-cap { visibility: hidden; }
+.ds-back { display: grid; place-items: center; flex: none; width: 36px; height: 36px; border: 0; border-radius: 50%; background: transparent; color: var(--muted); }
+@media (pointer: coarse) { .ds-back { width: 44px; height: 44px; margin-right: -4px; } }
+.dial-input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; font-size: var(--fs-16); color: var(--ink); min-height: 46px; }
+.dial-input::placeholder { color: var(--muted); }
+.dial-input::-webkit-search-cancel-button { display: none; }
+.dial-search:focus-within { box-shadow: var(--sh-float), 0 0 0 2px var(--primary); }
+.dial-kbd { font: 600 11px/1 var(--font); color: var(--muted); border: 1px solid var(--hairline); border-radius: var(--r-xs); padding: 4px 6px; }
+/* the shortcut only shows where a keyboard is likely: a fine pointer on a desktop-sized screen */
+.dial-kbd { display: none; }
+@media (hover: hover) and (pointer: fine) and (min-width: 1280px) { .dial-kbd { display: inline-block; } }
+.dial-results { position: absolute; left: 0; right: 0; top: calc(100% + 8px); max-height: calc(var(--R) * 2 + 8px); overflow-y: auto; background: var(--surface); border-radius: var(--r-lg); box-shadow: var(--sh-float); overflow: hidden; }
+.dial-results:empty { display: none; }
+.dial-res { width: 100%; display: flex; align-items: center; gap: 12px; min-height: 48px; padding: 0 14px; border: 0; background: transparent; text-align: left; font-size: var(--fs-14); color: var(--ink); }
+.dial-res .ic { color: var(--primary); }
+.dial-res span { flex: 1; font-weight: 500; }
+.dial-res small { color: var(--muted); font-size: var(--fs-12); }
+.dial-res[aria-selected="true"] { background: var(--primary-soft); }
+.dial-none { padding: 14px; font-size: var(--fs-14); color: var(--muted); }
+/* while searching, the ring steps back so the list is readable */
+.dial.searching .dial-disc, .dial.searching .dial-item, .dial.searching .dial-center { opacity: 0.12 !important; pointer-events: none; }
+
+.dial-hint { position: absolute; left: 50%; top: calc(var(--R) + 12px); translate: -50% 0; width: max-content; max-width: 280px; font-size: var(--fs-14); color: #fff; text-align: center; opacity: 0; }
+.dial-layer:not(.phone) .dial-hint { color: var(--ink); }
+.dial-hint.on { opacity: 1; }
+
+.dial-layer.closing .dial-disc, .dial-layer.closing .dial-item, .dial-layer.closing .dial-center, .dial-layer.closing .dial-cap, .dial-layer.closing .dial-search {
+  opacity: 0; transition-duration: 150ms; transition-delay: 0ms;
+}
+
+/* movement only for people who have not asked for reduced motion */
+@media (prefers-reduced-motion: no-preference) {
+  .dial-disc { scale: 0.9; }
+  .dial-layer.open .dial-disc { scale: 1; }
+  .dial-item { transform: rotate(var(--a)) translateY(-40px) rotate(calc(var(--a) * -1)) scale(0.9);
+    transition: opacity var(--t-dial) var(--ease-out), transform var(--t-dial) var(--ease-out), background-color var(--t-fast) var(--ease-out);
+    transition-delay: calc(var(--i) * 20ms), calc(var(--i) * 20ms), 0ms; }
+  .dial-layer.open .dial-item { transform: rotate(var(--a)) translateY(calc(var(--ir) * -1)) rotate(calc(var(--a) * -1)) scale(1); }
+  .dial-center { scale: 0.8; }
+  .dial-layer.open .dial-center { scale: 1; }
+  .dial-layer.closing .dial-disc { scale: 0.96; }
+}
+@media (hover: hover) and (pointer: fine) {
+  .dial-item:not(.off):hover { background: var(--primary-soft); }
+  .dial-res:hover { background: var(--canvas); }
+}
+
+/* the caption carries a small Customize button: what fills the ring is up to the person */
+.dial-cap { display: flex; align-items: center; gap: 4px; }
+.dial-cap > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.dial-edit {
+  display: grid; place-items: center; flex: none; width: 32px; height: 32px; margin: -4px 0; border: 0; border-radius: 50%;
+  background: transparent; color: var(--muted);
+}
+.dial-edit .ic { width: 16px; height: 16px; }
+@media (pointer: coarse) { .dial-edit { width: 40px; height: 40px; margin: -8px 0; } }
+@media (hover: hover) and (pointer: fine) { .dial-edit:hover { background: var(--canvas); color: var(--primary); } }
+
+/* a lighter caption: the subject reads first */
+.dial-cap { padding-block: 4px; }
+.dial-cap-k { font-size: var(--fs-12); }
+@media (hover: hover) and (pointer: fine) { .dc:hover { background: rgb(255 255 255 / 0.14); } }

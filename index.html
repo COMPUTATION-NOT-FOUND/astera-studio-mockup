@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Astera Studio mockup: the same clickable app on iPhone, iPad and desktop.">
+<title>Astera Studio</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='9' fill='%232f5bc2'/%3E%3Cg fill='%232f5bc2'%3E%3Ccircle cx='16' cy='2.5' r='2'/%3E%3Ccircle cx='27.7' cy='9.3' r='2'/%3E%3Ccircle cx='27.7' cy='22.7' r='2'/%3E%3Ccircle cx='16' cy='29.5' r='2'/%3E%3Ccircle cx='4.3' cy='22.7' r='2'/%3E%3Ccircle cx='4.3' cy='9.3' r='2'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/font.css">
+<link rel="stylesheet" href="css/tokens.css">
+<style>
+  body { overflow: auto; }
+  .wrap { max-width: 1560px; margin: 0 auto; padding: 28px 24px 56px; }
+  header.top { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px 32px; }
+  .intro h1 { font-size: 28px; font-weight: 650; letter-spacing: -0.02em; }
+  .intro h1 span { font-weight: 400; color: var(--muted); }
+  .intro p { margin-top: 6px; max-width: 62ch; color: var(--muted); }
+  .actions { display: flex; flex-wrap: wrap; gap: 8px; }
+  .bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin: 28px 0 20px; }
+  .bar .seg { overflow-x: auto; max-width: 100%; }
+  .bar p { font-size: var(--fs-14); color: var(--muted); }
+  .stage { display: grid; gap: 28px; align-items: start; }
+  .stage.all { grid-template-columns: minmax(0, 1fr) auto auto; }
+  .frame { display: flex; flex-direction: column; align-items: center; gap: 10px; min-width: 0; }
+  .device { position: relative; overflow: hidden; background: #0f1520; box-shadow: var(--sh-float); }
+  .device.phone { border-radius: 44px; padding: 12px; }
+  .device.tablet { border-radius: 28px; padding: 14px; }
+  .device.desk { border-radius: 14px; padding: 8px; }
+  .device iframe { display: block; border: 0; background: var(--canvas); transform-origin: 0 0; }
+  .device.phone iframe { border-radius: 32px; }
+  .device.tablet iframe { border-radius: 14px; }
+  .device.desk iframe { border-radius: 7px; }
+  .cap { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 12px; font-size: var(--fs-14); color: var(--muted); text-align: center; }
+  .cap b { color: var(--ink); font-weight: 600; }
+  .cap a { font-weight: 600; text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+  .tries { margin-top: 40px; display: grid; gap: 24px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+  .tries h2 { font-size: var(--fs-16); font-weight: 650; margin-bottom: 8px; }
+  .tries ol { list-style: decimal; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; font-size: var(--fs-14); }
+  .tries p { font-size: var(--fs-14); color: var(--muted); }
+  .narrow { display: none; }
+  @media (max-width: 1239px) { .stage.all { grid-template-columns: minmax(0, 1fr) auto; } .stage.all .frame.f-desk { grid-column: 1 / -1; } }
+  @media (max-width: 699px) {
+    .wrap { padding: 20px 16px 40px; }
+    .bar, .stage { display: none; }
+    .narrow { display: block; margin-top: 20px; padding: 16px; border-radius: var(--r-md); background: var(--surface); }
+    .narrow p { color: var(--muted); margin-bottom: 12px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="intro">
+      <h1>Astera Studio <span>clickable mockup</span></h1>
+      <p>Ask a question in plain words, get a chart with a short summary, pin it, and check the pipeline behind it. The same app runs in every frame below, and each layout adapts to its screen.</p>
+    </div>
+    <div class="actions">
+      <a class="btn primary" href="app.html#/dashboard">Open the app full screen</a>
+      <a class="btn" href="NOTE.pdf">Design note</a>
+    </div>
+  </header>
+
+  <div class="narrow"><p>You are on a narrow screen, so the device frames are hidden. The app itself is the phone layout.</p><a class="btn primary block" href="app.html#/dashboard">Open the app</a></div>
+
+  <div class="bar">
+    <div class="seg" role="group" aria-label="Devices" id="devs"></div>
+    <p id="hint">Frames are scaled to fit. Use “Open full size” for 100%.</p>
+  </div>
+  <div class="stage" id="stage"></div>
+
+  <section class="tries" aria-label="Things to try">
+    <div><h2>Ask and pin</h2><ol><li>Open Ask and tap “What explains the gap to target in Q3?”.</li><li>Tap “Pin to dashboard” and pick a dashboard.</li><li>Tap the menu (☰, “Chats” on desktop) to see earlier chats, or start a new one.</li></ol></div>
+    <div><h2>Focus the dashboard</h2><ol><li>Tap “Global”, pick Europe on the globe, then “Show”.</li><li>Tap the date range. Earlier years sit under Archive.</li><li>Tap “+ New” to start another dashboard.</li></ol></div>
+    <div><h2>Fix a failed pipeline</h2><ol><li>Two pipelines failed. Tap “Show” on the red line to see which.</li><li>Open Regional targets. On iPhone, tap “Details” on step 3.</li><li>Choose “Wait longer”, then “Save and re-run”.</li></ol></div>
+    <div><h2>The action dial</h2><ol><li>Tap the filled circle for actions on this screen.</li><li>Tap “⋯” on a chart or step for its own actions.</li><li>Search, the last circle, reaches everything else.</li></ol></div>
+  </section>
+</div>
+<script>
+(function () {
+  'use strict';
+  const DEVICES = {
+    phone: { label: 'iPhone', w: 375, h: 812, cls: 'phone', hash: '#/dashboard', note: '375 × 812' },
+    ipad: { label: 'iPad', w: 834, h: 1112, cls: 'tablet', hash: '#/pipelines/regional_targets', note: '834 × 1112, portrait' },
+    ipadl: { label: 'iPad landscape', w: 1024, h: 768, cls: 'tablet', hash: '#/dashboard', note: '1024 × 768' },
+    desk: { label: 'Desktop', w: 1440, h: 900, cls: 'desk', hash: '#/dashboard', note: '1440 × 900' }
+  };
+  const VIEWS = [['all', 'All devices'], ['phone', 'iPhone'], ['ipad', 'iPad'], ['ipadl', 'iPad landscape'], ['desk', 'Desktop']];
+  let view = 'all';
+  try { view = sessionStorage.getItem('studio.showcase') || 'all'; } catch (e) { /* storage blocked: start on All devices */ }
+  const stage = document.getElementById('stage'), devs = document.getElementById('devs');
+
+  function frame(key, maxW) {
+    const d = DEVICES[key], pad = d.cls === 'phone' ? 24 : d.cls === 'tablet' ? 28 : 16;
+    const s = Math.min(1, (maxW - pad) / d.w);
+    return `<div class="frame f-${key}">
+      <div class="device ${d.cls}" style="width:${Math.round(d.w * s) + pad}px;height:${Math.round(d.h * s) + pad}px">
+        <iframe src="app.html${d.hash}" title="Astera Studio on ${d.label}" width="${d.w}" height="${d.h}" style="transform:scale(${s})" loading="lazy"></iframe>
+      </div>
+      <p class="cap"><b>${d.label}</b><span>${d.note}${s < 1 ? ', shown at ' + Math.round(s * 100) + '%' : ''}</span><a href="app.html${d.hash}" target="_blank" rel="noopener">Open full size</a></p>
+    </div>`;
+  }
+  function render() {
+    devs.innerHTML = VIEWS.map(([k, l]) => `<button type="button" data-v="${k}" aria-pressed="${view === k}">${l}</button>`).join('');
+    const W = stage.clientWidth || document.documentElement.clientWidth - 48;
+    stage.className = 'stage' + (view === 'all' ? ' all' : '');
+    if (view === 'all') {
+      const wide = W >= 1240;
+      const phoneW = 300, tabW = wide ? 420 : Math.min(460, W - phoneW - 28);
+      const deskW = wide ? W - phoneW - tabW - 56 : W;
+      stage.innerHTML = frame('desk', deskW) + frame('ipad', tabW) + frame('phone', phoneW);
+    } else {
+      stage.innerHTML = frame(view, Math.min(W, view === 'phone' ? 420 : W));
+    }
+  }
+  devs.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    view = b.dataset.v;
+    try { sessionStorage.setItem('studio.showcase', view); } catch (e2) { /* storage blocked: choice lasts until reload */ }
+    render();
+  });
+  let t; window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(render, 200); });
+  render();
+})();
+</script>
+</body>
+</html>

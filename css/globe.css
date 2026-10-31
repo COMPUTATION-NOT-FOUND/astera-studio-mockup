@@ -1,0 +1,32 @@
+/* Region picker: the globe and the continent / country options under it */
+.rg { display: flex; flex-direction: column; gap: var(--s3); }
+.globe-wrap { display: grid; place-items: center; padding: var(--s2) 0 0; }
+.globe {
+  --globe-land: #c3c9d4; --globe-sea: var(--surface);
+  display: block; width: min(220px, 62vw); aspect-ratio: 1; border-radius: 50%;
+  touch-action: none; cursor: grab;
+}
+.globe:active { cursor: grabbing; }
+@media (min-width: 700px) { .globe { width: 260px; } }
+
+.rg-k { font-size: var(--fs-14); font-weight: 650; }
+.rg-k .muted { margin-left: 6px; font-weight: 400; }
+.rg-back { align-self: flex-start; display: inline-flex; align-items: center; gap: 4px; font-size: var(--fs-14); }
+.rg-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s2); }
+@media (min-width: 700px) { .rg-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.rg-opt {
+  display: flex; align-items: center; gap: 10px; min-height: 56px; min-width: 0; padding: 8px 12px;
+  border: 1px solid var(--hairline); border-radius: var(--r-md); background: var(--surface); color: var(--ink); text-align: left;
+  transition-property: background-color, border-color; transition-duration: var(--t-fast); transition-timing-function: var(--ease-out);
+}
+.rg-opt > .ic:first-child { width: 20px; height: 20px; color: var(--muted); flex: none; }
+.rg-opt > span { display: flex; flex-direction: column; min-width: 0; }
+.rg-opt b { font-size: var(--fs-14); font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rg-opt small { font-size: var(--fs-12); color: var(--muted); }
+.rg-opt .rg-more { margin-left: auto; color: var(--faint); flex: none; }
+.rg-opt.on { border-color: var(--primary); background: var(--primary-soft); }
+.rg-opt.on b, .rg-opt.on > .ic:first-child, .rg-opt.on .rg-more { color: var(--primary); }
+@media (prefers-reduced-motion: no-preference) { .rg-opt:active { scale: 0.98; } }
+@media (hover: hover) and (pointer: fine) { .rg-opt:not(.on):hover { border-color: var(--border); } }
+.region-sheet .sh-f .btn.block { width: 100%; }
+@media (min-width: 700px) { .region-sheet .sh-f .btn.block { width: auto; min-width: 180px; } }
