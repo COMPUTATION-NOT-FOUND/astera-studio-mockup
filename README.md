@@ -2,6 +2,9 @@
 
 A responsive, touch-friendly HTML mockup of Astera Studio for iPhone, iPad and desktop. Ask a question, get a chart with a short summary, pin it to a dashboard, and check or lightly edit the pipeline behind it.
 
+**Live:** https://computation-not-found.github.io/astera-studio-mockup/ (the app alone: [app.html](https://computation-not-found.github.io/astera-studio-mockup/app.html))
+**Repo:** https://github.com/COMPUTATION-NOT-FOUND/astera-studio-mockup
+
 ## How to open it
 
 No build step and no server. Open the files in a browser (tested in Chrome; works from `file://`):
